@@ -7,7 +7,9 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <UniversalTelegramBot.h>
-#include "data.h"
+#include "uptime_formatter.h" // "Uptime Library" by Yiannis Bourkelis
+#include <TimeLib.h>
+#include "data.h" // Local file
 ESP8266WebServer server(80);
 
 X509List cert(TELEGRAM_CERTIFICATE_ROOT);
@@ -76,11 +78,20 @@ void setup () {
  
   server.begin();
   bot.sendMessage(USER_ID, "Webserver opened!");
+  Serial.println(hour());
 }
  
 void loop() {
   server.handleClient();
-  digitalWrite(12, HIGH);
+  /*
+  if(hour() > 21){
+    digitalWrite(12, LOW);
+  } else if (hour() < 7){
+    digitalWrite(12, LOW);
+  } else {
+    digitalWrite(12, HIGH);
+  }
+  */
   if (millis() - bot_lasttime > BOT_MTBS)
   {
     int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
@@ -93,7 +104,6 @@ void loop() {
 
     bot_lasttime = millis();
   }
-  Serial.println(timer);
 }
 
 //================== PAGES ==================
@@ -104,12 +114,16 @@ void mainpage() {
   digitalWrite(14, HIGH);
   delay(1000);
   digitalWrite(14, LOW);
+
 }
 
 void stats() {
   Serial.print("Opened | Status Page");
   DynamicJsonDocument doc(512);
   doc["status"] = "on";
+  doc["lights"][0]["red"] = digitalRead(12);
+  doc["lights"][0]["green"] = digitalRead(14);
+  doc["uptime"] = uptime_formatter::getUptime();
   String buf;
   serializeJson(doc, buf);
   server.send(200, "application/json", buf);
