@@ -36,7 +36,12 @@ void handleNewMessages(int numNewMessages)
       
       if (text == "/status")
       {
-        bot.sendMessage(chat_id, "Led is ON", "");
+        String stats_bot = "Stats:\n\n";
+        stats_bot += "Status : on\n";
+        stats_bot += "Lights : Red: " + digitalRead(12) + " | Green: " + digitalRead(14) + "\n";
+        stats_bot += "Uptime : " + uptime_formatter::getUptime();  
+        bot.sendMessage(chat_id, welcome, "Markdown");
+        
       }
   
       if (text == "/start")
