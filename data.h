@@ -1,8 +1,16 @@
 // Author: ReXulEc
 // Website: rexulec.com
+// Email: hi@rexulec.com
 
-//You can add more files using this method!
 
+// INFORMATIONS!
+const char SSID_NAME[] = "";
+const char PASSWORD[] = "";
+const char BOT_TOKEN[] = "";
+const char USER_ID[] = "";
+
+
+// You can add more files using this method!
 const char webpageCode[] =
 R"=====(
 <!DOCTYPE html>
